@@ -201,6 +201,22 @@ export default function Kasir() {
     toast.success(`${p.name} ditambahkan ke keranjang`);
   };
 
+  const handleScan = (e) => {
+    if (e.key !== "Enter") return;
+    const q = search.trim().toLowerCase();
+    if (!q) return;
+    const match = products.find(
+      (p) => (p.barcode && p.barcode.toLowerCase() === q) || p.code.toLowerCase() === q
+    );
+    if (match) {
+      if (match.category !== tab) setTab(match.category);
+      addToCart(match);
+      setSearch("");
+    } else {
+      toast.error(`Barcode/kode "${search.trim()}" tidak ditemukan`);
+    }
+  };
+
   const changeQty = (id, delta) => {
     const product = products.find((p) => p.id === id);
     setCart((prev) =>
@@ -265,7 +281,8 @@ export default function Kasir() {
               data-testid="pos-search-input"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari produk..."
+              onKeyDown={handleScan}
+              placeholder="Cari produk atau scan barcode lalu Enter..."
               className="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-10 pr-4 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
             />
           </div>

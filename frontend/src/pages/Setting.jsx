@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Users, Package, Store, Plus, Pencil, Trash2, X, AlertTriangle, ShieldAlert,
-  Search, ArrowUpDown, ArrowUp, ArrowDown,
+  Search, ArrowUpDown, ArrowUp, ArrowDown, Upload, FileDown,
 } from "lucide-react";
 import { toast } from "sonner";
 import { usePos } from "@/context/PosContext";
@@ -190,7 +190,7 @@ const UsersSection = () => {
 };
 
 // ---------- Manajemen Barang & Stok ----------
-const emptyProduct = { code: "", name: "", category: "physical", price: 0, stock: 0, minStock: 5 };
+const emptyProduct = { code: "", barcode: "", name: "", category: "physical", price: 0, stock: 0, minStock: 5 };
 
 const InventorySection = () => {
   const { products, addProduct, updateProduct, deleteProduct } = usePos();
@@ -199,6 +199,9 @@ const InventorySection = () => {
   const [filterCat, setFilterCat] = useState("all");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState({ key: null, dir: "asc" });
+  const [selected, setSelected] = useState([]);
+  const [lowStockOnly, setLowStockOnly] = useState(false);
+  const fileRef = useRef(null);
 
   const toggleSort = (key) =>
     setSort((s) => {
@@ -230,7 +233,7 @@ const InventorySection = () => {
     setModal({ mode: "add" });
   };
   const openEdit = (p) => {
-    setForm({ code: p.code, name: p.name, category: p.category, price: p.price, stock: p.stock, minStock: p.minStock });
+    setForm({ code: p.code, barcode: p.barcode || "", name: p.name, category: p.category, price: p.price, stock: p.stock, minStock: p.minStock });
     setModal({ mode: "edit", id: p.id });
   };
 
@@ -258,8 +261,10 @@ const InventorySection = () => {
       (p) =>
         !search ||
         p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.code.toLowerCase().includes(search.toLowerCase())
+        p.code.toLowerCase().includes(search.toLowerCase()) ||
+        (p.barcode && p.barcode.includes(search.trim()))
     )
+    .filter((p) => !lowStockOnly || (p.category !== "digital" && p.stock <= p.minStock))
     .sort((a, b) => {
       if (!sort.key) return 0;
       let cmp = 0;
@@ -268,15 +273,104 @@ const InventorySection = () => {
       else cmp = (a[sort.key] || 0) - (b[sort.key] || 0);
       return sort.dir === "asc" ? cmp : -cmp;
     });
+
+  const toggleSelect = (id) => setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+  const allVisibleSelected = visible.length > 0 && visible.every((p) => selected.includes(p.id));
+  const toggleSelectAll = () =>
+    setSelected((s) =>
+      allVisibleSelected ? s.filter((id) => !visible.some((p) => p.id === id)) : [...new Set([...s, ...visible.map((p) => p.id)])]
+    );
+  const deleteSelected = () => {
+    selected.forEach((id) => deleteProduct(id));
+    toast.success(`${selected.length} produk dihapus`);
+    setSelected([]);
+  };
+
+  const downloadTemplate = () => {
+    const csv =
+      "code,barcode,name,category,price,stock,minStock\n" +
+      "PHY-100,8990001000100,Contoh Produk Fisik,physical,15000,20,5\n" +
+      "DIG-100,,Contoh Produk Digital,digital,27000,999,0\n";
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "template-upload-barang-exapos.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const parseCSV = (text) => {
+    const lines = text.split(/\r?\n/).filter((l) => l.trim());
+    return lines.map((line) => {
+      const cells = [];
+      let cur = "";
+      let inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (inQ) {
+          if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+          else if (ch === '"') inQ = false;
+          else cur += ch;
+        } else if (ch === '"') inQ = true;
+        else if (ch === ",") { cells.push(cur.trim()); cur = ""; }
+        else cur += ch;
+      }
+      cells.push(cur.trim());
+      return cells;
+    });
+  };
+
+  const handleMassUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const rows = parseCSV(String(reader.result));
+        const startIdx = rows.length && String(rows[0][0]).toLowerCase().includes("code") ? 1 : 0;
+        let added = 0, updated = 0, skipped = 0;
+        rows.slice(startIdx).forEach((r) => {
+          const [code, barcode, name, category, price, stock, minStock] = r;
+          if (!code || !name || isNaN(Number(price)) || Number(price) <= 0) { skipped++; return; }
+          const cat = ["physical", "digital", "online"].includes(category) ? category : "physical";
+          const payload = {
+            code,
+            barcode: barcode || "",
+            name,
+            category: cat,
+            price: Number(price),
+            stock: Number(stock) || 0,
+            minStock: Number(minStock) || 0,
+          };
+          const existing = products.find((p) => p.code === code);
+          if (existing) { updateProduct(existing.id, payload); updated++; }
+          else { addProduct(payload); added++; }
+        });
+        toast.success(`Upload massal selesai: ${added} ditambah, ${updated} diperbarui, ${skipped} dilewati`);
+      } catch {
+        toast.error("File CSV tidak valid");
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
   const lowCount = products.filter((p) => p.category !== "digital" && p.stock <= p.minStock).length;
 
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center gap-3">
         {lowCount > 0 && (
-          <span className="flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-700" data-testid="low-stock-alert">
+          <button
+            data-testid="low-stock-alert"
+            onClick={() => setLowStockOnly((v) => !v)}
+            title="Klik untuk menampilkan hanya produk stok menipis"
+            className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-colors ${
+              lowStockOnly ? "bg-amber-500 text-white" : "bg-amber-50 text-amber-700 hover:bg-amber-100"
+            }`}
+          >
             <AlertTriangle className="h-3.5 w-3.5" /> {lowCount} produk stok menipis
-          </span>
+          </button>
         )}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -299,20 +393,55 @@ const InventorySection = () => {
           <option value="digital">Produk Digital</option>
           <option value="online">Produk Online</option>
         </select>
-        <button
-          data-testid="add-product-button"
-          onClick={openAdd}
-          className="ml-auto flex items-center gap-2 rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800"
-        >
-          <Plus className="h-4 w-4" /> Tambah Produk
-        </button>
+        <div className="ml-auto flex flex-wrap items-center gap-2">
+          {selected.length > 0 && (
+            <button
+              data-testid="bulk-delete-button"
+              onClick={deleteSelected}
+              className="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700"
+            >
+              <Trash2 className="h-4 w-4" /> Hapus Terpilih ({selected.length})
+            </button>
+          )}
+          <button
+            data-testid="csv-template-button"
+            onClick={downloadTemplate}
+            className="flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 transition-colors hover:border-blue-400 hover:text-blue-700"
+          >
+            <FileDown className="h-4 w-4" /> Template CSV
+          </button>
+          <button
+            data-testid="mass-upload-button"
+            onClick={() => fileRef.current?.click()}
+            className="flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 transition-colors hover:border-blue-400 hover:text-blue-700"
+          >
+            <Upload className="h-4 w-4" /> Upload Massal
+          </button>
+          <input ref={fileRef} type="file" accept=".csv,text/csv" className="hidden" data-testid="mass-upload-input" onChange={handleMassUpload} />
+          <button
+            data-testid="add-product-button"
+            onClick={openAdd}
+            className="flex items-center gap-2 rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-800"
+          >
+            <Plus className="h-4 w-4" /> Tambah Produk
+          </button>
+        </div>
       </div>
 
       <div className="overflow-x-auto rounded-xl border border-slate-200">
         <table className="w-full text-sm" data-testid="inventory-table">
           <thead>
             <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
-              <th className="px-5 py-3 font-medium">Kode</th>
+              <th className="px-5 py-3 font-medium">
+                <input
+                  data-testid="select-all-checkbox"
+                  type="checkbox"
+                  checked={allVisibleSelected}
+                  onChange={toggleSelectAll}
+                  className="h-4 w-4 rounded border-slate-300 align-middle accent-blue-700"
+                />
+              </th>
+              <th className="px-5 py-3 font-medium">Barcode</th>
               <SortTh label="Nama Produk" sortKey="name" />
               <SortTh label="Tipe" sortKey="category" />
               <th className="px-5 py-3 text-right font-medium">Harga</th>
@@ -327,7 +456,16 @@ const InventorySection = () => {
               const low = p.category !== "digital" && p.stock <= p.minStock;
               return (
                 <tr key={p.id} className="border-b border-slate-100 bg-white last:border-0 hover:bg-slate-50" data-testid={`inventory-row-${p.id}`}>
-                  <td className="px-5 py-3.5 font-mono text-xs font-semibold text-slate-600">{p.code}</td>
+                  <td className="px-5 py-3.5">
+                    <input
+                      data-testid={`select-row-${p.id}`}
+                      type="checkbox"
+                      checked={selected.includes(p.id)}
+                      onChange={() => toggleSelect(p.id)}
+                      className="h-4 w-4 rounded border-slate-300 accent-blue-700"
+                    />
+                  </td>
+                  <td className="px-5 py-3.5 font-mono text-xs font-semibold text-slate-600">{p.barcode || "—"}</td>
                   <td className="px-5 py-3.5 font-semibold text-slate-800">{p.name}</td>
                   <td className="px-5 py-3.5">
                     <span className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${catBadge[p.category]}`}>{catLabel[p.category]}</span>
@@ -381,6 +519,11 @@ const InventorySection = () => {
               <Field label="Kode Produk">
                 <input data-testid="product-form-code" className={inputCls} value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} placeholder="PHY-009" />
               </Field>
+              <Field label="Barcode (opsional)">
+                <input data-testid="product-form-barcode" className={inputCls} value={form.barcode} onChange={(e) => setForm({ ...form, barcode: e.target.value })} placeholder="8990001xxxxxx" />
+              </Field>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
               <Field label="Tipe">
                 <select data-testid="product-form-category" className={inputCls} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
                   <option value="physical">Fisik</option>
@@ -388,10 +531,10 @@ const InventorySection = () => {
                   <option value="online">Online</option>
                 </select>
               </Field>
+              <Field label="Nama Produk">
+                <input data-testid="product-form-name" className={inputCls} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Nama produk" />
+              </Field>
             </div>
-            <Field label="Nama Produk">
-              <input data-testid="product-form-name" className={inputCls} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Nama produk" />
-            </Field>
             <div className="grid grid-cols-3 gap-3">
               <Field label="Harga (Rp)">
                 <input data-testid="product-form-price" type="number" min="0" className={inputCls} value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />

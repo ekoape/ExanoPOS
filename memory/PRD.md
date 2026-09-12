@@ -36,6 +36,11 @@ Spesifikasi detail: mock authentication, dummy state management (localStorage), 
 - Inventory (Setting → Barang & Stok): pencarian barang + sortable headers (nama abjad, tipe grouping, stok, min. stok).
 - **PWA offline** (12 Sep 2026): `public/manifest.json`, `public/sw.js` (cache-first + precache app shell), ikon PNG 192/512/maskable dari logo, registrasi SW di `index.js`. Installable dari browser & berjalan offline penuh.
 - **Portable Windows app** (12 Sep 2026): Electron wrapper di `/app/desktop/` (main.js + package.json), frontend di-build dengan `homepage: "./"` lalu dipaket via `@electron/packager@18` + `electron@33` (pinned karena Node 20). Output: `frontend/public/EXAPOS-portable-win64.zip` (~116 MB) — dapat diunduh di `/EXAPOS-portable-win64.zip`, ekstrak lalu jalankan `EXAPOS.exe` (tanpa installer, offline penuh, data di localStorage Electron).
+- **Bug fix layar putih Electron** (12 Sep 2026): BrowserRouter crash di file:// (replaceState SecurityError, origin null) → `App.js` memakai HashRouter saat `protocol === 'file:'`. Terverifikasi testing_agent iterasi 2 (file:// build render + login OK).
+- **PWA install button** (12 Sep 2026): `components/InstallPWA.jsx` (beforeinstallprompt) di halaman Login + sidebar. Catatan: di headless Chromium tombol tidak muncul (beforeinstallprompt tidak ter-fire) — normal; di Chrome/Edge desktop asli muncul.
+- **Scan barcode di Kasir** (12 Sep 2026): input pencarian menerima scan barcode/kode + Enter → item langsung masuk keranjang; field `barcode` ditambahkan ke semua produk (seed + migrasi by-id tanpa mengubah stok) dan form produk.
+- **Barang & Stok v2** (12 Sep 2026): kolom Kode diganti Barcode; badge stok menipis bisa diklik untuk filter; upload massal CSV (template + parser, upsert by code); centang item + Hapus Terpilih. Iterasi 2 testing agent: 100% pass.
+- PENTING build portable: jangan letakkan zip di `public/` sebelum `yarn build` (zip ikut ter-copy ke build → zip-dalam-zip). Alur benar: build → bersihkan zip dari public/build → packager → zip → baru copy ke public/.
 
 ## Backlog Prioritas
 - **P1**: Persistensi backend nyata (FastAPI + MongoDB) jika multi-perangkat dibutuhkan; autentikasi JWT sesungguhnya.

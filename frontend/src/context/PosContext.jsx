@@ -23,7 +23,14 @@ const persist = (key, value) => {
 const SEED_VERSION = "2";
 
 export const PosProvider = ({ children }) => {
-  const [products, setProducts] = useState(() => load("exapos_products", seedProducts));
+  const [products, setProducts] = useState(() => {
+    const stored = load("exapos_products", null);
+    if (!stored) return seedProducts;
+    return stored.map((p) => {
+      const seed = seedProducts.find((s) => s.id === p.id);
+      return seed && p.barcode === undefined ? { ...p, barcode: seed.barcode } : p;
+    });
+  });
   const [transactions, setTransactions] = useState(() => load("exapos_transactions", buildSeedTransactions()));
   const [users, setUsers] = useState(() => {
     const stored = load("exapos_users", null);

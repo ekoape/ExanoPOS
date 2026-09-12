@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2, ShieldCheck, Zap, ReceiptText } from "lucide-react";
 import { toast } from "sonner";
 import { usePos } from "@/context/PosContext";
+import InstallPWA from "@/components/InstallPWA";
 
 export default function Login() {
   const { login, settings } = usePos();
@@ -139,6 +140,10 @@ export default function Login() {
                 {loading ? "Memproses..." : "Masuk ke EXAPOS"}
               </button>
             </form>
+          </div>
+
+          <div className="mt-4">
+            <InstallPWA />
           </div>
 
           <p className="mt-6 text-center text-xs font-medium tracking-wider text-slate-400" data-testid="login-watermark">

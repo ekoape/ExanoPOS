@@ -1,5 +1,5 @@
 import "@/App.css";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
 import { PosProvider, usePos } from "@/context/PosContext";
 import Layout from "@/components/Layout";
@@ -7,6 +7,8 @@ import Login from "@/pages/Login";
 import Dashboard from "@/pages/Dashboard";
 import Kasir from "@/pages/Kasir";
 import Setting from "@/pages/Setting";
+
+const Router = window.location.protocol === "file:" ? HashRouter : BrowserRouter;
 
 const Protected = ({ children, roles }) => {
   const { currentUser } = usePos();
@@ -18,8 +20,7 @@ const Protected = ({ children, roles }) => {
 function App() {
   return (
     <PosProvider>
-      <BrowserRouter>
-        <Toaster position="top-center" richColors closeButton />
+      <Router>        <Toaster position="top-center" richColors closeButton />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
@@ -50,7 +51,7 @@ function App() {
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </BrowserRouter>
+      </Router>
     </PosProvider>
   );
 }

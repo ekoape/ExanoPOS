@@ -14,28 +14,28 @@ export const seedUsers = [
 
 export const seedProducts = [
   // Physical
-  { id: "p1", code: "PHY-001", name: "Kopi Espresso", category: "physical", price: 18000, stock: 40, minStock: 10 },
-  { id: "p2", code: "PHY-002", name: "Cafe Latte", category: "physical", price: 24000, stock: 35, minStock: 10 },
-  { id: "p3", code: "PHY-003", name: "Cappuccino", category: "physical", price: 25000, stock: 28, minStock: 10 },
-  { id: "p4", code: "PHY-004", name: "Matcha Latte", category: "physical", price: 26000, stock: 8, minStock: 10 },
-  { id: "p5", code: "PHY-005", name: "Croissant Butter", category: "physical", price: 20000, stock: 25, minStock: 8 },
-  { id: "p6", code: "PHY-006", name: "Kentang Goreng", category: "physical", price: 18000, stock: 30, minStock: 10 },
-  { id: "p7", code: "PHY-007", name: "Kaos Polos EXA", category: "physical", price: 75000, stock: 15, minStock: 5 },
-  { id: "p8", code: "PHY-008", name: "Tumbler Exano", category: "physical", price: 95000, stock: 4, minStock: 5 },
+  { id: "p1", code: "PHY-001", barcode: "8990001000001", name: "Kopi Espresso", category: "physical", price: 18000, stock: 40, minStock: 10 },
+  { id: "p2", code: "PHY-002", barcode: "8990001000002", name: "Cafe Latte", category: "physical", price: 24000, stock: 35, minStock: 10 },
+  { id: "p3", code: "PHY-003", barcode: "8990001000003", name: "Cappuccino", category: "physical", price: 25000, stock: 28, minStock: 10 },
+  { id: "p4", code: "PHY-004", barcode: "8990001000004", name: "Matcha Latte", category: "physical", price: 26000, stock: 8, minStock: 10 },
+  { id: "p5", code: "PHY-005", barcode: "8990001000005", name: "Croissant Butter", category: "physical", price: 20000, stock: 25, minStock: 8 },
+  { id: "p6", code: "PHY-006", barcode: "8990001000006", name: "Kentang Goreng", category: "physical", price: 18000, stock: 30, minStock: 10 },
+  { id: "p7", code: "PHY-007", barcode: "8990001000007", name: "Kaos Polos EXA", category: "physical", price: 75000, stock: 15, minStock: 5 },
+  { id: "p8", code: "PHY-008", barcode: "8990001000008", name: "Tumbler Exano", category: "physical", price: 95000, stock: 4, minStock: 5 },
   // Digital
-  { id: "d1", code: "DIG-001", name: "Pulsa 25.000", category: "digital", price: 27000, stock: 999, minStock: 0 },
-  { id: "d2", code: "DIG-002", name: "Pulsa 50.000", category: "digital", price: 52000, stock: 999, minStock: 0 },
-  { id: "d3", code: "DIG-003", name: "Pulsa 100.000", category: "digital", price: 102000, stock: 999, minStock: 0 },
-  { id: "d4", code: "DIG-004", name: "Paket Data 10GB", category: "digital", price: 55000, stock: 999, minStock: 0 },
-  { id: "d5", code: "DIG-005", name: "Paket Data 25GB", category: "digital", price: 110000, stock: 999, minStock: 0 },
-  { id: "d6", code: "DIG-006", name: "Token PLN 50.000", category: "digital", price: 51500, stock: 999, minStock: 0 },
-  { id: "d7", code: "DIG-007", name: "Token PLN 100.000", category: "digital", price: 101500, stock: 999, minStock: 0 },
-  { id: "d8", code: "DIG-008", name: "Voucher Game 100K", category: "digital", price: 108000, stock: 999, minStock: 0 },
+  { id: "d1", code: "DIG-001", barcode: "8990002000001", name: "Pulsa 25.000", category: "digital", price: 27000, stock: 999, minStock: 0 },
+  { id: "d2", code: "DIG-002", barcode: "8990002000002", name: "Pulsa 50.000", category: "digital", price: 52000, stock: 999, minStock: 0 },
+  { id: "d3", code: "DIG-003", barcode: "8990002000003", name: "Pulsa 100.000", category: "digital", price: 102000, stock: 999, minStock: 0 },
+  { id: "d4", code: "DIG-004", barcode: "8990002000004", name: "Paket Data 10GB", category: "digital", price: 55000, stock: 999, minStock: 0 },
+  { id: "d5", code: "DIG-005", barcode: "8990002000005", name: "Paket Data 25GB", category: "digital", price: 110000, stock: 999, minStock: 0 },
+  { id: "d6", code: "DIG-006", barcode: "8990002000006", name: "Token PLN 50.000", category: "digital", price: 51500, stock: 999, minStock: 0 },
+  { id: "d7", code: "DIG-007", barcode: "8990002000007", name: "Token PLN 100.000", category: "digital", price: 101500, stock: 999, minStock: 0 },
+  { id: "d8", code: "DIG-008", barcode: "8990002000008", name: "Voucher Game 100K", category: "digital", price: 108000, stock: 999, minStock: 0 },
   // Online
-  { id: "o1", code: "ONL-001", name: "Bundling Kopi + Croissant", category: "online", price: 40000, stock: 12, minStock: 5 },
-  { id: "o2", code: "ONL-002", name: "Keyboard Wireless", category: "online", price: 185000, stock: 6, minStock: 3 },
-  { id: "o3", code: "ONL-003", name: "Mouse Bluetooth", category: "online", price: 95000, stock: 9, minStock: 3 },
-  { id: "o4", code: "ONL-004", name: "Hoodie EXA Signature", category: "online", price: 210000, stock: 3, minStock: 5 },
+  { id: "o1", code: "ONL-001", barcode: "8990003000001", name: "Bundling Kopi + Croissant", category: "online", price: 40000, stock: 12, minStock: 5 },
+  { id: "o2", code: "ONL-002", barcode: "8990003000002", name: "Keyboard Wireless", category: "online", price: 185000, stock: 6, minStock: 3 },
+  { id: "o3", code: "ONL-003", barcode: "8990003000003", name: "Mouse Bluetooth", category: "online", price: 95000, stock: 9, minStock: 3 },
+  { id: "o4", code: "ONL-004", barcode: "8990003000004", name: "Hoodie EXA Signature", category: "online", price: 210000, stock: 3, minStock: 5 },
 ];
 
 const daysAgo = (n, hour = 10, minute = 15) => {

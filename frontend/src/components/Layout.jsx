@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { LayoutDashboard, ShoppingCart, Settings, LogOut, Menu, X, Store } from "lucide-react";
 import { usePos } from "@/context/PosContext";
+import InstallPWA from "@/components/InstallPWA";
 import { toast } from "sonner";
 
 const menuItems = [
@@ -78,6 +79,9 @@ const SidebarContent = ({ onNavigate, idSuffix = "" }) => {
       </nav>
 
       <div className="border-t border-slate-800 px-4 py-4">
+        <div className="mb-3">
+          <InstallPWA dark />
+        </div>
         <div className="mb-3 flex items-center gap-3 rounded-lg bg-[#1E293B] px-3 py-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600/20 text-sm font-bold text-blue-400">
             {currentUser?.name?.charAt(0)}
