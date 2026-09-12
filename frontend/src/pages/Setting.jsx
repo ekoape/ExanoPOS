@@ -4,6 +4,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { usePos } from "@/context/PosContext";
+import { defaultSettings } from "@/data/seedData";
 import { fmtRp } from "@/utils/format";
 
 const tabs = [
@@ -365,7 +366,7 @@ const AppInfoSection = () => {
 
   const handleSave = (e) => {
     e.preventDefault();
-    saveSettings(form);
+    saveSettings({ ...form, watermark: defaultSettings.watermark });
     toast.success("Pengaturan aplikasi berhasil disimpan");
   };
 
@@ -391,12 +392,11 @@ const AppInfoSection = () => {
       <Field label="Teks Footer Struk">
         <input data-testid="settings-receipt-footer" className={inputCls} value={form.receiptFooter} onChange={(e) => setForm({ ...form, receiptFooter: e.target.value })} />
       </Field>
-      <Field label="Watermark Aplikasi">
-        <input data-testid="settings-watermark" className={inputCls} value={form.watermark} onChange={(e) => setForm({ ...form, watermark: e.target.value })} />
-        <p className="mt-1.5 text-xs text-slate-400">
-          Ditampilkan di sidebar, footer halaman, dan bagian bawah struk belanja.
-        </p>
-      </Field>
+      <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+        <p className="text-xs font-medium uppercase tracking-wider text-slate-500">Watermark Aplikasi</p>
+        <p className="mt-1 text-sm font-semibold text-slate-700" data-testid="settings-watermark-display">{defaultSettings.watermark}</p>
+        <p className="mt-1 text-xs text-slate-400">Watermark bawaan aplikasi dan tidak dapat diubah.</p>
+      </div>
       <button data-testid="save-settings-button" type="submit" className="rounded-lg bg-blue-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-800">
         Simpan Pengaturan
       </button>
