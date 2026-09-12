@@ -1,0 +1,187 @@
+{
+  "project_name": "EXAPOS",
+  "company_name": "PT Exano Technology Solution",
+  "tagline_watermark": "Powered by PT Exano Technology Solution",
+  "app_type": "saas_app_pos",
+  "theme": {
+    "default_mode": "light",
+    "rationale": "High-contrast clean light theme designed specifically for retail and cashier counter environments with bright glare, paired with a dark slate navigation sidebar for visual grounding and effortless shift operation."
+  },
+  "typography": {
+    "font_families": {
+      "heading": "Outfit, Plus Jakarta Sans, sans-serif",
+      "body": "Inter, DM Sans, sans-serif",
+      "numeric_mono": "JetBrains Mono, IBM Plex Mono, monospace"
+    },
+    "weights": {
+      "light": 300,
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700,
+      "black": 800
+    },
+    "hierarchy": {
+      "h1_login_hero": "text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900",
+      "h2_page_title": "text-2xl sm:text-3xl font-bold tracking-tight text-slate-900",
+      "h3_section_title": "text-lg sm:text-xl font-semibold text-slate-800",
+      "card_title": "text-base font-semibold text-slate-800",
+      "body_text": "text-sm text-slate-600 leading-relaxed",
+      "small_label": "text-xs font-medium uppercase tracking-wider text-slate-500",
+      "currency_large": "font-mono text-2xl sm:text-3xl font-bold text-blue-700 tracking-tight",
+      "receipt_mono": "font-mono text-xs sm:text-sm text-slate-900 leading-snug"
+    }
+  },
+  "colors": {
+    "primary": {
+      "main": "#1E40AF",
+      "hover": "#1E3A8A",
+      "light": "#EFF6FF",
+      "accent_cobalt": "#2563EB",
+      "label": "Royal Cobalt"
+    },
+    "dark_sidebar": {
+      "bg": "#0F172A",
+      "hover": "#1E293B",
+      "active": "#2563EB",
+      "text": "#94A3B8",
+      "text_active": "#FFFFFF"
+    },
+    "status": {
+      "success_green": "#059669",
+      "success_bg": "#ECFDF5",
+      "warning_amber": "#D97706",
+      "warning_bg": "#FFFBEB",
+      "danger_red": "#DC2626",
+      "danger_bg": "#FEF2F2",
+      "info_indigo": "#4F46E5",
+      "info_bg": "#EEF2FF"
+    },
+    "surfaces": {
+      "body_bg": "#F8FAFC",
+      "card_bg": "#FFFFFF",
+      "border": "#E2E8F0",
+      "input_bg": "#FFFFFF",
+      "input_border": "#CBD5E1",
+      "watermark_text": "text-slate-400 font-medium text-xs tracking-wider"
+    },
+    "categories": {
+      "physical": "bg-blue-50 text-blue-700 border-blue-200",
+      "digital": "bg-purple-50 text-purple-700 border-purple-200",
+      "online": "bg-emerald-50 text-emerald-700 border-emerald-200"
+    }
+  },
+  "spacing_and_layout": {
+    "sidebar_width": "w-64 xl:w-72",
+    "header_height": "h-16",
+    "content_padding": "p-4 sm:p-6 lg:p-8",
+    "grid_gap": "gap-4 sm:gap-6",
+    "card_padding": "p-5 sm:p-6",
+    "border_radius": {
+      "modal": "rounded-2xl",
+      "card": "rounded-xl",
+      "button": "rounded-lg",
+      "pill": "rounded-full"
+    },
+    "shadows": {
+      "subtle": "shadow-sm border border-slate-200/80",
+      "card": "shadow-sm hover:shadow-md transition-shadow duration-200 border border-slate-200",
+      "modal": "shadow-2xl border border-slate-200",
+      "glow_accent": "shadow-lg shadow-blue-500/20"
+    }
+  },
+  "pages_architecture": [
+    {
+      "page_id": "login",
+      "name": "Login Page",
+      "route": "/login",
+      "features": [
+        "EXAPOS Brand Badge with Royal Cobalt Icon & Clean typography",
+        "Subtitle: 'Powered by PT Exano Technology Solution'",
+        "Clean elevated login card with subtle inner shadow",
+        "Role selection tabs/pills: Kasir, Admin, Manager for quick demo prepopulate",
+        "Inputs: Username/Email, Password with password visibility toggle",
+        "Primary CTA button: 'Masuk ke EXAPOS' with loading spinner state",
+        "Subtle footer watermark copyright notice"
+      ]
+    },
+    {
+      "page_id": "global_layout",
+      "name": "Global POS Shell",
+      "route": "/*",
+      "features": [
+        "Dark Slate Left Sidebar with active state indicator glow pill",
+        "Top Header Bar: Store Name ('Toko Exano Tech'), Cashier On Shift badge, Live Clock, Notifications, Cart Counter",
+        "Sidebar Menu: Dashboard, Kasir (POS), Setting",
+        "Watermark Footer on sidebar & main workspace footer: 'Powered by PT Exano Technology Solution'"
+      ]
+    },
+    {
+      "page_id": "dashboard",
+      "name": "Dashboard Overview",
+      "route": "/",
+      "features": [
+        "Revenue Summary Cards: Daily Omset (Omset Hari Ini), Monthly Omset (Omset Bulan Ini), Total Transactions (Total Transaksi) with trend indicators (+12.4% vs kemarin)",
+        "Quick Action Button: 'Unduh Rekap (Excel/CSV)' generating downloadable transaction recap",
+        "Recent Sales History Table: Invoice ID (e.g. INV-20260715-001), Date & Time, Customer/Type, Total Amount in Rp (JetBrains Mono font), Payment Method Badge (Tunai, QRIS, Transfer), Action button: 'Cetak Ulang Struk'",
+        "Thermal Printer Receipt Modal triggered by Cetak Ulang Struk button"
+      ]
+    },
+    {
+      "page_id": "kasir_pos",
+      "name": "Kasir Workspace (POS)",
+      "route": "/kasir",
+      "features": [
+        "3 Main Category Tabs: Product (physical F&B/Retail), Product Digital (pulsa, data, PLN tokens, game vouchers), Product Online (e-commerce sync orders)",
+        "Search bar with live filtering by name/barcode + sub-category quick pill filters (Kopi, Makanan, Pulsa, Token PLN, dll)",
+        "Product Grid Cards: Image/Icon, Name, Price (Rp), Stock count badge (Low stock warning), Quick '+ Tambah' button with hover animation",
+        "Cart Sidebar (Sticky Right Panel): Item list, quantity steppers (- / +), delete item, discount input (% or Rp), tax calculation (11% PPN option), subtotal, final total in prominent bold display",
+        "Checkout Modal: Payment Method selector (Cash, QRIS with simulated QR code display, Bank Transfer), Quick Cash suggestion pills (Pas, Rp 50.000, Rp 100.000, Rp 200.000), Real-time Change calculation (Kembalian)",
+        "Instant Thermal Print Receipt Trigger upon payment completion"
+      ]
+    },
+    {
+      "page_id": "settings",
+      "name": "Setting (Pengaturan)",
+      "route": "/setting",
+      "features": [
+        "Sub-tabs: (1) Akses Akun, (2) Manajemen Barang & Stok, (3) Pengaturan Informasi Aplikasi POS",
+        "Akses Akun: User accounts table (Name, Email, Role: Admin/Kasir/Manager, Status toggle, Add User modal, Edit, Delete)",
+        "Manajemen Barang & Stok: Inventory master table across categories (Item Code, Name, Category, Type: Physical/Digital/Online, Sell Price, Stock Qty, Min Stock, Low-stock alert badge, Add Product modal, Edit Price/Stock modal)",
+        "Pengaturan Informasi Aplikasi POS: Store settings form (Nama Toko, Alamat Lengkap, No. Telepon, Teks Footer Struk, Watermark Custom Text, Save settings button with toast notification)"
+      ]
+    }
+  ],
+  "thermal_receipt_spec": {
+    "container_style": "w-80 mx-auto bg-white p-6 border border-slate-300 font-mono text-xs text-slate-900 shadow-lg leading-relaxed tracking-tight",
+    "header": "PT EXANO TECHNOLOGY SOLUTION\nEXAPOS Point of Sale System",
+    "dashed_line": "----------------------------------------",
+    "sections": [
+      "Store Header & Address",
+      "Invoice ID & Timestamp & Cashier Name",
+      "Itemized Table (Name, Qty x Price, Total)",
+      "Subtotal, Tax (PPN 11%), Discount, Grand Total",
+      "Payment Method & Paid Amount & Kembalian (Change)",
+      "Footer Message & QR Code representation",
+      "Watermark: Powered by PT Exano Technology Solution"
+    ]
+  },
+  "image_urls": {
+    "pos_hardware": "https://images.unsplash.com/photo-1592488874899-35c8ed86d2e3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNDR8MHwxfHNlYXJjaHw0fHxyZXRhaWwlMjBwcm9kdWN0cyUyMGNvZmZlZSUyMHNuYWNrJTIwc3RvcmUlMjBjYXNoaWVyJTIwcG9zfGVufDB8fHx8MTc4OTE4NjAwMnww&ixlib=rb-4.1.0&q=85",
+    "pos_counter": "https://images.unsplash.com/photo-1602665742701-389671bc40c0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNDR8MHwxfHNlYXJjaHwxfHxyZXRhaWwlMjBwcm9kdWN0cyUyMGNvZmZlZSUyMHNuYWNrJTIwc3RvcmUlMjBjYXNoaWVyJTIwcG9zfGVufDB8fHx8MTc4OTE4NjAwMnww&ixlib=rb-4.1.0&q=85",
+    "products": {
+      "espresso": "https://images.unsplash.com/photo-1485808191679-5f86510681a2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2OTV8MHwxfHNlYXJjaHwxfHxjb2ZmZWUlMjBjdXAlMjBsYXR0ZSUyMGVzcHJlc3NvJTIwcmV0YWlsJTIwcHJvZHVjdHxlbnwwfHx8fDE3ODkxODYwMDl8MA&ixlib=rb-4.1.0&q=85",
+      "latte_art": "https://images.unsplash.com/photo-1502462041640-b3d7e50d0662?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2OTV8MHwxfHNlYXJjaHwyfHxjb2ZmZWUlMjBjdXAlMjBsYXR0ZSUyMGVzcHJlc3NvJTIwcmV0YWlsJTIwcHJvZHVjdHxlbnwwfHx8fDE3ODkxODYwMDl8MA&ixlib=rb-4.1.0&q=85",
+      "cappuccino": "https://images.unsplash.com/photo-1506372023823-741c83b836fe?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2OTV8MHwxfHNlYXJjaHw0fHxjb2ZmZWUlMjBjdXAlMjBsYXR0ZSUyMGVzcHJlc3NvJTIwcmV0YWlsJTIwcHJvZHVjdHxlbnwwfHx8fDE3ODkxODYwMDl8MA&ixlib=rb-4.1.0&q=85",
+      "matcha_latte": "https://images.unsplash.com/photo-1533776992670-a72f4c28235e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2OTV8MHwxfHNlYXJjaHwzfHxjb2ZmZWUlMjBjdXAlMjBsYXR0ZSUyMGVzcHJlc3NvJTIwcmV0YWlsJTIwcHJvZHVjdHxlbnwwfHx8fDE3ODkxODYwMDl8MA&ixlib=rb-4.1.0&q=85"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Ensure all interactive elements have concise kebab-case data-testid attributes (e.g. data-testid='login-submit-button', data-testid='pos-tab-digital', data-testid='checkout-pay-button', data-testid='export-recap-button').",
+    "All monetary values must be formatted in Indonesian Rupiah style: e.g. Rp 150.000 (space after Rp, dot thousands separators). Use font-mono for monetary tables.",
+    "Implement Sonner toasts for all cashier operational feedback (e.g. 'Produk ditambahkan ke keranjang', 'Pembayaran Berhasil!', 'Struk berhasil dicetak', 'Stok berhasil diperbarui').",
+    "Keep 'Powered by PT Exano Technology Solution' watermark visible on the login page subtitle, global layout footer, sidebar bottom, and thermal receipt modal.",
+    "Make sure the checkout payment change calculation ('Kembalian') updates instantly as the cashier types or selects quick cash amounts.",
+    "For digital products (Pulsa/Paket Data/Token PLN), show customer phone number / meter number input field before adding to cart."
+  ]
+}

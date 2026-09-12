@@ -1,0 +1,31 @@
+{
+  "summary": "Frontend-only testing of EXAPOS POS app. Executed 40+ UI checks covering login (valid/invalid/preset), Dashboard cards + CSV export + reprint receipt, Kasir tabs/search/add-to-cart/PPN toggle/checkout flow with change calculation + receipt, Setting page (users/inventory/info save + header reflection), role-based access (Kasir denied), logout, localStorage persistence, and mobile viewport. All critical flows pass. Two non-blocking issues found: horizontal overflow at 390px width, and duplicate data-testid for sidebar nav links (desktop + mobile sidebar both rendered).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Layout / responsive", "issue": "Horizontal overflow at 390px viewport (document.scrollWidth > clientWidth). Some element (likely dashboard cards, sales table, or fixed-width elements) causes horizontal scroll on mobile.", "selector": "root html/body", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Mobile 390px", "issues": ["Horizontal overflow present; consider overflow-x-hidden on main container and making tables/cards responsive"]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix horizontal overflow on mobile (390px). Likely candidates: sales-history-table, summary cards row, or dashboard grid. Add overflow-x-auto wrapper around tables and check for min-w classes.",
+    "Deduplicate sidebar nav data-testid: mobile drawer and desktop sidebar both render <a data-testid=\"sidebar-nav-*\">. This breaks Playwright strict-mode queries. Either only mount the visible sidebar or suffix testids (e.g., sidebar-nav-kasir-mobile)."
+  ],
+  "critical_code_review_comments": [
+    "Duplicate data-testid across mobile and desktop sidebar (Layout.jsx) causes strict-mode violations in automated tests — dedupe or conditionally render.",
+    "Mobile horizontal overflow indicates missing responsive constraints; add overflow-x-hidden to app shell and make tables scroll internally.",
+    "PPN 11% toggle default state observed as ON (baseline Rp 19.980 -> Rp 18.000 after toggle). Verify this is intended default per spec (spec says 'PPN 11% tax toggle' suggesting user-controlled, default not specified)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped per request)", "frontend": "~95% (39/41 checks passed)"},
+  "test_credentials": "admin@exapos.id/admin123, kasir@exapos.id/kasir123, manager@exapos.id/manager123 — all working via mock auth",
+  "seed_data_creation": "None — used built-in localStorage seed data. Note: settings.storeName was modified to 'EXAPOS Test Store' during test and persists in localStorage.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "App is 100% frontend with localStorage mock auth. All data-testids required by spec are present. If tests fail unexpectedly, clear localStorage keys prefixed exapos_ and reload. During my test I changed store name to 'EXAPOS Test Store'; main agent may want to reset it. Duplicate sidebar-nav-* testids exist for mobile+desktop sidebars — use .first when selecting.",
+  "rca of the issue": "Horizontal overflow at 390px: likely caused by fixed-width grid children (e.g., min-w on cards, non-scrollable table). Duplicate testids: Layout.jsx renders both mobile drawer and desktop <aside>, both use identical data-testid values on nav <Link> elements."
+}

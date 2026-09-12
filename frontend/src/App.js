@@ -1,0 +1,43 @@
+import "@/App.css";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "sonner";
+import { PosProvider, usePos } from "@/context/PosContext";
+import Layout from "@/components/Layout";
+import Login from "@/pages/Login";
+import Dashboard from "@/pages/Dashboard";
+import Kasir from "@/pages/Kasir";
+import Setting from "@/pages/Setting";
+
+const Protected = ({ children }) => {
+  const { currentUser } = usePos();
+  if (!currentUser) return <Navigate to="/login" replace />;
+  return children;
+};
+
+function App() {
+  return (
+    <PosProvider>
+      <BrowserRouter>
+        <Toaster position="top-center" richColors closeButton />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              <Protected>
+                <Layout />
+              </Protected>
+            }
+          >
+            <Route index element={<Dashboard />} />
+            <Route path="kasir" element={<Kasir />} />
+            <Route path="setting" element={<Setting />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </PosProvider>
+  );
+}
+
+export default App;
