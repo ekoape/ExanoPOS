@@ -8,9 +8,10 @@ import Dashboard from "@/pages/Dashboard";
 import Kasir from "@/pages/Kasir";
 import Setting from "@/pages/Setting";
 
-const Protected = ({ children }) => {
+const Protected = ({ children, roles }) => {
   const { currentUser } = usePos();
   if (!currentUser) return <Navigate to="/login" replace />;
+  if (roles && !roles.includes(currentUser.role)) return <Navigate to="/kasir" replace />;
   return children;
 };
 
@@ -29,9 +30,23 @@ function App() {
               </Protected>
             }
           >
-            <Route index element={<Dashboard />} />
+            <Route
+              index
+              element={
+                <Protected roles={["Admin", "Manager"]}>
+                  <Dashboard />
+                </Protected>
+              }
+            />
             <Route path="kasir" element={<Kasir />} />
-            <Route path="setting" element={<Setting />} />
+            <Route
+              path="setting"
+              element={
+                <Protected roles={["Admin", "Manager"]}>
+                  <Setting />
+                </Protected>
+              }
+            />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

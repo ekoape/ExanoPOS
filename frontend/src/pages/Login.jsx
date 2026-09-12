@@ -40,7 +40,7 @@ export default function Login() {
       setLoading(false);
       if (res.ok) {
         toast.success(`Selamat datang, ${res.user.name}!`);
-        navigate("/");
+        navigate(res.user.role === "Kasir" ? "/kasir" : "/");
       } else {
         setError(res.error);
       }

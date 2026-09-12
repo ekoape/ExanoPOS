@@ -5,7 +5,7 @@ import { usePos } from "@/context/PosContext";
 import { toast } from "sonner";
 
 const menuItems = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard, testId: "sidebar-nav-dashboard", end: true },
+  { to: "/", label: "Dashboard", icon: LayoutDashboard, testId: "sidebar-nav-dashboard", end: true, roles: ["Admin", "Manager"] },
   { to: "/kasir", label: "Kasir", icon: ShoppingCart, testId: "sidebar-nav-kasir" },
   { to: "/setting", label: "Setting", icon: Settings, testId: "sidebar-nav-setting", roles: ["Admin", "Manager"] },
 ];
