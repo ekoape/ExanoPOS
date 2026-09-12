@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import {
   Search, Plus, Minus, Trash2, ShoppingCart, Coffee, Smartphone, Globe,
-  Banknote, QrCode, CreditCard, AlertTriangle,
+  Banknote, QrCode, CreditCard, AlertTriangle, History, Printer,
 } from "lucide-react";
 import { toast } from "sonner";
 import { usePos } from "@/context/PosContext";
@@ -157,7 +157,7 @@ const CheckoutModal = ({ total, cart, discount, tax, subtotal, targetNumber, onC
 };
 
 export default function Kasir() {
-  const { products } = usePos();
+  const { products, transactions } = usePos();
   const [tab, setTab] = useState("physical");
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState([]);
@@ -439,6 +439,41 @@ export default function Kasir() {
             >
               Bayar Sekarang
             </button>
+
+            <div className="border-t border-dashed border-slate-200 pt-3" data-testid="recent-transactions">
+              <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <History className="h-3.5 w-3.5" /> 5 Transaksi Terakhir
+              </p>
+              {transactions.length === 0 ? (
+                <p className="py-2 text-center text-xs text-slate-400">Belum ada transaksi</p>
+              ) : (
+                <div className="space-y-1">
+                  {transactions.slice(0, 5).map((t) => (
+                    <div
+                      key={t.id}
+                      className="flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-slate-50"
+                      data-testid={`recent-tx-${t.id}`}
+                    >
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate font-mono text-[11px] font-semibold text-slate-700">{t.id}</p>
+                        <p className="text-[10px] text-slate-400">
+                          {new Date(t.date).toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                        </p>
+                      </div>
+                      <span className="whitespace-nowrap font-mono text-xs font-bold text-slate-800">{fmtRp(t.total)}</span>
+                      <button
+                        data-testid={`recent-tx-reprint-${t.id}`}
+                        onClick={() => setLastTx(t)}
+                        title="Cetak Ulang Struk"
+                        className="rounded-md border border-blue-200 bg-blue-50 p-1.5 text-blue-700 transition-colors hover:bg-blue-100"
+                      >
+                        <Printer className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </aside>
