@@ -28,6 +28,14 @@ Spesifikasi detail: mock authentication, dummy state management (localStorage), 
 - Kasir: 3 tab kategori, pencarian, grid produk dengan badge stok (Menipis/Habis), input No. HP/ID Pelanggan untuk produk digital, keranjang (stepper qty, hapus, diskon Rp, toggle PPN 11% — nonaktif otomatis untuk produk digital), checkout modal (Tunai/QRIS/Transfer, quick cash pills, kembalian real-time), cetak struk setelah bayar, stok fisik/online berkurang otomatis.
 - Setting: Akses Akun (CRUD user, role, toggle status aktif); Barang & Stok (CRUD produk lintas kategori, harga, stok, min. stok, alert stok menipis); Info Aplikasi POS (nama toko, alamat, telepon, footer struk, teks watermark) — perubahan langsung ter-reflect di header/footer/struk.
 - Testing agent iteration_1: ~95% pass (39/41). Diperbaiki: duplikasi data-testid sidebar mobile/desktop (suffix `-mobile`), overflow horizontal mobile (overflow-x-hidden + min-w-0 pada shell).
+- Watermark di Setting dijadikan read-only (tidak bisa diubah, selalu "Powered by PT Exano Technology Solution").
+- Role Kasir dibatasi hanya ke menu Kasir (sidebar filter + route guard + redirect login ke /kasir).
+- Panel "5 Transaksi Terakhir" di Kasir dengan cetak ulang struk.
+- Logo diganti file resmi `public/exano-logo.webp` (sidebar + login).
+- Panel demo login dihapus; akun live: exanoadm@gmail.com (Admin/Owner), migrasi seed v2 di PosContext.
+- Inventory (Setting → Barang & Stok): pencarian barang + sortable headers (nama abjad, tipe grouping, stok, min. stok).
+- **PWA offline** (12 Sep 2026): `public/manifest.json`, `public/sw.js` (cache-first + precache app shell), ikon PNG 192/512/maskable dari logo, registrasi SW di `index.js`. Installable dari browser & berjalan offline penuh.
+- **Portable Windows app** (12 Sep 2026): Electron wrapper di `/app/desktop/` (main.js + package.json), frontend di-build dengan `homepage: "./"` lalu dipaket via `@electron/packager@18` + `electron@33` (pinned karena Node 20). Output: `frontend/public/EXAPOS-portable-win64.zip` (~116 MB) — dapat diunduh di `/EXAPOS-portable-win64.zip`, ekstrak lalu jalankan `EXAPOS.exe` (tanpa installer, offline penuh, data di localStorage Electron).
 
 ## Backlog Prioritas
 - **P1**: Persistensi backend nyata (FastAPI + MongoDB) jika multi-perangkat dibutuhkan; autentikasi JWT sesungguhnya.

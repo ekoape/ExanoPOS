@@ -89,3 +89,7 @@ android-sdk/
 credentials.json
 *.key
 .credentials
+desktop/dist/EXAPOS-portable-win64.zip
+desktop/dist/EXAPOS-win32-x64/EXAPOS.exe
+desktop/node_modules/electron/dist/electron
+frontend/public/EXAPOS-portable-win64.zip

@@ -1,0 +1,14 @@
+{
+  "name": "exapos-desktop",
+  "productName": "EXAPOS",
+  "version": "1.0.0",
+  "description": "EXAPOS — Aplikasi Kasir Point of Sale offline oleh PT Exano Technology Solution",
+  "main": "main.js",
+  "author": "PT Exano Technology Solution",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "@electron/packager": "18",
+    "electron": "33"
+  }
+}
