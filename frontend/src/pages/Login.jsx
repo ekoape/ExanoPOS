@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Loader2, Store, ShieldCheck, Zap, ReceiptText } from "lucide-react";
+import { Eye, EyeOff, Loader2, ShieldCheck, Zap, ReceiptText } from "lucide-react";
 import { toast } from "sonner";
 import { usePos } from "@/context/PosContext";
 
@@ -51,9 +51,12 @@ export default function Login() {
     <div className="flex min-h-screen bg-[#F8FAFC]">
       <div className="hidden flex-1 flex-col justify-between bg-[#0F172A] p-12 lg:flex">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 shadow-lg shadow-blue-500/30">
-            <Store className="h-7 w-7 text-white" />
-          </div>
+          <img
+            src="/exano-logo.webp"
+            alt="Logo EXAPOS"
+            className="h-12 w-12 rounded-xl object-cover shadow-lg shadow-blue-500/30"
+            data-testid="login-logo"
+          />
           <p className="font-heading text-2xl font-extrabold tracking-tight text-white">EXAPOS</p>
         </div>
         <div>
@@ -86,9 +89,11 @@ export default function Login() {
       <div className="flex flex-1 items-center justify-center p-6">
         <div className="w-full max-w-md">
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-700 shadow-lg shadow-blue-500/25 lg:hidden">
-              <Store className="h-8 w-8 text-white" />
-            </div>
+            <img
+              src="/exano-logo.webp"
+              alt="Logo EXAPOS"
+              className="mx-auto mb-4 h-14 w-14 rounded-2xl object-cover shadow-lg shadow-blue-500/25 lg:hidden"
+            />
             <h2 className="font-heading text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl" data-testid="login-title">
               EXAPOS
             </h2>

@@ -43,9 +43,12 @@ const SidebarContent = ({ onNavigate, idSuffix = "" }) => {
   return (
     <div className="flex h-full flex-col bg-[#0F172A] text-slate-400">
       <div className="flex items-center gap-3 px-6 py-6">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 shadow-lg shadow-blue-500/30">
-          <Store className="h-6 w-6 text-white" />
-        </div>
+        <img
+          src="/exano-logo.webp"
+          alt="Logo EXAPOS"
+          className="h-11 w-11 rounded-xl object-cover shadow-lg shadow-blue-500/30"
+          data-testid="sidebar-logo"
+        />
         <div>
           <p className="font-heading text-xl font-extrabold tracking-tight text-white">EXAPOS</p>
           <p className="text-[10px] uppercase tracking-widest text-slate-500">Point of Sale</p>
