@@ -7,9 +7,9 @@ export const defaultSettings = {
 };
 
 export const seedUsers = [
-  { id: "u1", name: "Andi Pratama", email: "admin@exapos.id", password: "admin123", role: "Admin", active: true },
-  { id: "u2", name: "Sari Wulandari", email: "kasir@exapos.id", password: "kasir123", role: "Kasir", active: true },
-  { id: "u3", name: "Budi Santoso", email: "manager@exapos.id", password: "manager123", role: "Manager", active: true },
+  { id: "u1", name: "Admin Exano", email: "exanoadm@gmail.com", password: "Exano#2026!", role: "Admin", active: true },
+  { id: "u2", name: "Kasir EXAPOS", email: "kasir@exapos.id", password: "Kasir#2026!", role: "Kasir", active: true },
+  { id: "u3", name: "Manager EXAPOS", email: "manager@exapos.id", password: "Manager#2026!", role: "Manager", active: true },
 ];
 
 export const seedProducts = [

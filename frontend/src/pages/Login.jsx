@@ -4,12 +4,6 @@ import { Eye, EyeOff, Loader2, ShieldCheck, Zap, ReceiptText } from "lucide-reac
 import { toast } from "sonner";
 import { usePos } from "@/context/PosContext";
 
-const rolePresets = [
-  { role: "Admin", email: "admin@exapos.id", password: "admin123" },
-  { role: "Kasir", email: "kasir@exapos.id", password: "kasir123" },
-  { role: "Manager", email: "manager@exapos.id", password: "manager123" },
-];
-
 export default function Login() {
   const { login, settings } = usePos();
   const navigate = useNavigate();
@@ -18,14 +12,6 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [activePreset, setActivePreset] = useState(null);
-
-  const applyPreset = (preset) => {
-    setActivePreset(preset.role);
-    setUsername(preset.email);
-    setPassword(preset.password);
-    setError("");
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -103,25 +89,6 @@ export default function Login() {
           </div>
 
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-slate-500">Masuk sebagai (demo)</p>
-            <div className="mb-6 grid grid-cols-3 gap-2">
-              {rolePresets.map((p) => (
-                <button
-                  key={p.role}
-                  type="button"
-                  data-testid={`login-preset-${p.role.toLowerCase()}`}
-                  onClick={() => applyPreset(p)}
-                  className={`rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
-                    activePreset === p.role
-                      ? "border-blue-700 bg-blue-700 text-white"
-                      : "border-slate-300 bg-white text-slate-600 hover:border-blue-400 hover:text-blue-700"
-                  }`}
-                >
-                  {p.role}
-                </button>
-              ))}
-            </div>
-
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">Username / Email</label>
@@ -130,7 +97,7 @@ export default function Login() {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="admin@exapos.id"
+                  placeholder="Masukkan email Anda"
                   className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
                 />
               </div>

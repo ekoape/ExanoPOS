@@ -20,10 +20,20 @@ const persist = (key, value) => {
   }
 };
 
+const SEED_VERSION = "2";
+
 export const PosProvider = ({ children }) => {
   const [products, setProducts] = useState(() => load("exapos_products", seedProducts));
   const [transactions, setTransactions] = useState(() => load("exapos_transactions", buildSeedTransactions()));
-  const [users, setUsers] = useState(() => load("exapos_users", seedUsers));
+  const [users, setUsers] = useState(() => {
+    const stored = load("exapos_users", null);
+    if (!stored || load("exapos_seed_version", null) !== SEED_VERSION) {
+      const custom = (stored || []).filter((u) => !seedUsers.some((s) => s.id === u.id));
+      persist("exapos_seed_version", SEED_VERSION);
+      return [...seedUsers, ...custom];
+    }
+    return stored;
+  });
   const [settings, setSettings] = useState(() => load("exapos_settings", defaultSettings));
   const [currentUser, setCurrentUser] = useState(() => load("exapos_auth", null));
 
