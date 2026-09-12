@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   Users, Package, Store, Plus, Pencil, Trash2, X, AlertTriangle, ShieldAlert,
+  Search, ArrowUpDown, ArrowUp, ArrowDown,
 } from "lucide-react";
 import { toast } from "sonner";
 import { usePos } from "@/context/PosContext";
@@ -196,6 +197,33 @@ const InventorySection = () => {
   const [modal, setModal] = useState(null);
   const [form, setForm] = useState(emptyProduct);
   const [filterCat, setFilterCat] = useState("all");
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState({ key: null, dir: "asc" });
+
+  const toggleSort = (key) =>
+    setSort((s) => {
+      if (s.key === key) return { key, dir: s.dir === "asc" ? "desc" : "asc" };
+      return { key, dir: key === "stock" || key === "minStock" ? "desc" : "asc" };
+    });
+
+  const SortTh = ({ label, sortKey, right }) => (
+    <th className={`px-5 py-3 font-medium ${right ? "text-right" : ""}`}>
+      <button
+        data-testid={`sort-${sortKey}`}
+        onClick={() => toggleSort(sortKey)}
+        className={`inline-flex items-center gap-1 text-xs uppercase tracking-wider transition-colors hover:text-blue-700 ${
+          sort.key === sortKey ? "text-blue-700" : "text-slate-500"
+        }`}
+      >
+        {label}
+        {sort.key === sortKey ? (
+          sort.dir === "asc" ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />
+        ) : (
+          <ArrowUpDown className="h-3 w-3 opacity-40" />
+        )}
+      </button>
+    </th>
+  );
 
   const openAdd = () => {
     setForm(emptyProduct);
@@ -223,7 +251,23 @@ const InventorySection = () => {
     setModal(null);
   };
 
-  const visible = products.filter((p) => filterCat === "all" || p.category === filterCat);
+  const catOrder = { physical: 0, digital: 1, online: 2 };
+  const visible = products
+    .filter((p) => filterCat === "all" || p.category === filterCat)
+    .filter(
+      (p) =>
+        !search ||
+        p.name.toLowerCase().includes(search.toLowerCase()) ||
+        p.code.toLowerCase().includes(search.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (!sort.key) return 0;
+      let cmp = 0;
+      if (sort.key === "name") cmp = a.name.localeCompare(b.name, "id");
+      else if (sort.key === "category") cmp = catOrder[a.category] - catOrder[b.category];
+      else cmp = (a[sort.key] || 0) - (b[sort.key] || 0);
+      return sort.dir === "asc" ? cmp : -cmp;
+    });
   const lowCount = products.filter((p) => p.category !== "digital" && p.stock <= p.minStock).length;
 
   return (
@@ -234,6 +278,16 @@ const InventorySection = () => {
             <AlertTriangle className="h-3.5 w-3.5" /> {lowCount} produk stok menipis
           </span>
         )}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <input
+            data-testid="inventory-search-input"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Cari barang / kode..."
+            className="rounded-lg border border-slate-300 bg-white py-2 pl-9 pr-3 text-sm outline-none placeholder:text-slate-400 focus:border-blue-600"
+          />
+        </div>
         <select
           data-testid="inventory-filter-category"
           value={filterCat}
@@ -259,11 +313,11 @@ const InventorySection = () => {
           <thead>
             <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
               <th className="px-5 py-3 font-medium">Kode</th>
-              <th className="px-5 py-3 font-medium">Nama Produk</th>
-              <th className="px-5 py-3 font-medium">Tipe</th>
+              <SortTh label="Nama Produk" sortKey="name" />
+              <SortTh label="Tipe" sortKey="category" />
               <th className="px-5 py-3 text-right font-medium">Harga</th>
-              <th className="px-5 py-3 text-right font-medium">Stok</th>
-              <th className="px-5 py-3 text-right font-medium">Min. Stok</th>
+              <SortTh label="Stok" sortKey="stock" right />
+              <SortTh label="Min. Stok" sortKey="minStock" right />
               <th className="px-5 py-3 font-medium">Status</th>
               <th className="px-5 py-3 text-right font-medium">Aksi</th>
             </tr>
